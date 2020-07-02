@@ -126,6 +126,12 @@ function overallTeamViz(incomingData, tagRaiz) {
   criandoEventoClick("button.teams", buttonClick);
   criandoEventoMouseOver("g.overallG", highlightRegion);
   criandoEventoMouseout("g.overallG", eventMouseout);
+
+  select("circle").each(function (d, i) {
+    console.log(d);
+    console.log(i);
+    console.log(this);
+  });
 }
 
 //----------------------- loading dos dados -----------------------------
