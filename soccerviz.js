@@ -2,10 +2,10 @@ import { csv } from "d3-fetch";
 import { select, selectAll } from "d3-selection";
 import { keys } from "d3-collection";
 import { max } from "d3-array";
+import { scaleLinear } from "d3";
 
 function overallTeamViz(incomingData, tagRaiz) {
   let dataKeys = criandoKeys(incomingData[0]);
-  let tag = "button.teams";
 
   select(tagRaiz)
     .append("g")
@@ -39,19 +39,45 @@ function overallTeamViz(incomingData, tagRaiz) {
     });
 
   function buttonClick(datapoint) {
-    console.log("foi cricado");
+    let maxValue = max(incomingData, (el) => {
+      return parseFloat(el[datapoint]);
+    });
 
-    //   let maxValue = max(incomingData, (el) => {
-    //     return parseFloat(el[datapoint]);
-    //   });
+    let radiusScale = scaleLinear().domain([0, maxValue]).range([2, 20]);
+
+    teamG.select("circle").attr("r", (d) => {
+      return radiusScale(d[datapoint]);
+    });
+  }
+
+  function highlightRegion(datapoint) {
+    selectAll("g.overallG")
+      .select("circle")
+      .style("fill", (p) => {
+        return p.region == datapoint.region ? "red" : "gray";
+      });
+  }
+
+  function eventMouseout(datapoint) {
+    selectAll("g.overallG").select("circle").style("fill", "pink");
   }
 
   criandoButtons(dataKeys);
-  criandoEventoClick(tag, buttonClick);
+  criandoEventoClick("button.teams", buttonClick);
+  criandoEventoMouseOver("g.overallG", highlightRegion);
+  criandoEventoMouseout("g.overallG", eventMouseout);
+}
+
+function criandoEventoMouseOver(tag, callback) {
+  selectAll(tag).on("mouseover", callback);
 }
 
 function criandoEventoClick(tag, callback) {
   selectAll(tag).on("click", callback);
+}
+
+function criandoEventoMouseout(tag, callback) {
+  selectAll(tag).on("mouseout", callback);
 }
 
 function criandoButtons(dataKeys) {
