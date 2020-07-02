@@ -17,17 +17,18 @@ function overallTeamViz(incomingData, tagRaiz) {
     .append("g")
     .attr("class", "overallG")
     .attr("transform", (d, i) => {
-      return "translate(" + i * 50 + "," + "0)"; // translate(x, y)
+      return "translate(" + i * 70 + "," + "0)"; // translate(x, y)
     });
 
   let teamG = selectAll("g.overallG");
 
-  teamG
-    .append("circle")
-    .attr("r", 20)
-    .style("fill", "pink")
-    .style("stroke", "black")
-    .style("stroke-width", "1px");
+  inciandoGraficos(teamG);
+  // teamG
+  //   .append("circle")
+  //   .attr("r", 20)
+  //   .style("fill", "pink")
+  //   .style("stroke", "black")
+  //   .style("stroke-width", "1px");
 
   teamG
     .append("text")
@@ -45,14 +46,20 @@ function overallTeamViz(incomingData, tagRaiz) {
 
     let radiusScale = scaleLinear().domain([0, maxValue]).range([2, 20]);
 
-    teamG.select("circle").attr("r", (d) => {
-      return radiusScale(d[datapoint]);
-    });
+    teamG
+      .select("circle")
+      .transition()
+      .duration(1000)
+      .attr("r", (d) => {
+        return radiusScale(d[datapoint]);
+      });
   }
 
   function highlightRegion(datapoint) {
     selectAll("g.overallG")
       .select("circle")
+      .transition()
+      .duration(500)
       .style("fill", (p) => {
         return p.region == datapoint.region ? "red" : "gray";
       });
@@ -66,6 +73,25 @@ function overallTeamViz(incomingData, tagRaiz) {
   criandoEventoClick("button.teams", buttonClick);
   criandoEventoMouseOver("g.overallG", highlightRegion);
   criandoEventoMouseout("g.overallG", eventMouseout);
+}
+
+function inciandoGraficos(teamG) {
+  teamG
+    .append("circle")
+    .attr("r", 0)
+    .transition()
+    .delay((d, i) => {
+      return i * 100;
+    })
+    .transition()
+    .duration(500)
+    .attr("r", 40)
+    .transition()
+    .duration(500)
+    .attr("r", 20)
+    .style("fill", "pink")
+    .style("stroke", "black")
+    .style("stroke-width", "1px");
 }
 
 function criandoEventoMouseOver(tag, callback) {
