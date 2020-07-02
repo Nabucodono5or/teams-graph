@@ -118,20 +118,36 @@ function overallTeamViz(incomingData, tagRaiz) {
       });
   }
 
+  function highlightRegion2(d, i, node) {
+    select(this).select("text").classed("active", true).attr("y", 10);
+    // selectAll("g.overallG")
+    //   .select("circle")
+    //   .each(function (p, index) {
+    //     p.region == d.region
+    //       ? select(node[index]).classed("active", true)
+    //       : select(node[index]).classed("inactive", true);
+    //   });
+  }
+
+  function unHighLight() {
+    selectAll("g.overallG").select("circle").attr("class", "");
+    selectAll("g.overallG").select("text").attr("y", 30);
+  }
+
   function eventMouseout(datapoint) {
     selectAll("g.overallG").select("circle").style("fill", "pink");
   }
 
   criandoButtons(dataKeys);
   criandoEventoClick("button.teams", buttonClick);
-  criandoEventoMouseOver("g.overallG", highlightRegion);
-  criandoEventoMouseout("g.overallG", eventMouseout);
+  criandoEventoMouseOver("g.overallG", highlightRegion2);
+  criandoEventoMouseout("g.overallG", unHighLight);
 
-  select("circle").each(function (d, i) {
-    console.log(d);
-    console.log(i);
-    console.log(this);
-  });
+  // select("circle").each(function (d, i) {
+  //   console.log(d);
+  //   console.log(i);
+  //   console.log(this);
+  // });
 }
 
 //----------------------- loading dos dados -----------------------------
