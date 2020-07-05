@@ -19,7 +19,6 @@ function inciandoGraficos(teamG) {
     .transition()
     .duration(500)
     .attr("r", 20)
-    .style("fill", "pink")
     .style("stroke", "black")
     .style("stroke-width", "1px");
 }
@@ -87,10 +86,15 @@ function overallTeamViz(incomingData, tagRaiz) {
     .append("text")
     .attr("y", 30)
     .style("text-anchor", "middle")
-    .style("font-size", "10px")
+    // .style("font-size", "10px")
     .text((d) => {
       return d.team;
     });
+
+  criandoButtons(dataKeys);
+  criandoEventoClick("button.teams", buttonClick);
+  criandoEventoMouseOver("g.overallG", highlightRegion2);
+  criandoEventoMouseout("g.overallG", unHighLight);
 
   function buttonClick(datapoint) {
     let maxValue = max(incomingData, (el) => {
@@ -127,21 +131,27 @@ function overallTeamViz(incomingData, tagRaiz) {
     //       ? select(node[index]).classed("active", true)
     //       : select(node[index]).classed("inactive", true);
     //   });
+    selectAll("g.overallG")
+      .select("circle")
+      .each(function (p, id) {
+        p.region == d.region
+          ? // ? select(this).style("fill", "red")
+            // : select(this).style("fill", "gray");
+            select(this).classed("active", true)
+          : select(this).classed("inactive", true);
+        if (p.region == d.region) console.log(p.region + " : " + p.team);
+      });
   }
 
   function unHighLight() {
     selectAll("g.overallG").select("circle").attr("class", "");
+    selectAll("g.overallG").select("text").attr("class", "");
     selectAll("g.overallG").select("text").attr("y", 30);
   }
 
   function eventMouseout(datapoint) {
     selectAll("g.overallG").select("circle").style("fill", "pink");
   }
-
-  criandoButtons(dataKeys);
-  criandoEventoClick("button.teams", buttonClick);
-  criandoEventoMouseOver("g.overallG", highlightRegion2);
-  criandoEventoMouseout("g.overallG", unHighLight);
 
   // select("circle").each(function (d, i) {
   //   console.log(d);
@@ -153,7 +163,7 @@ function overallTeamViz(incomingData, tagRaiz) {
 //----------------------- loading dos dados -----------------------------
 function createSoccerViz() {
   csv(require("./data/worldcup.csv")).then((data) => {
-    console.log(data);
+    // console.log(data);
     overallTeamViz(data, "svg");
   });
 }
