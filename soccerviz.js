@@ -75,18 +75,12 @@ function overallTeamViz(incomingData, tagRaiz) {
   let teamG = selectAll("g.overallG");
 
   inciandoGraficos(teamG);
-  // teamG
-  //   .append("circle")
-  //   .attr("r", 20)
-  //   .style("fill", "pink")
-  //   .style("stroke", "black")
-  //   .style("stroke-width", "1px");
 
   teamG
     .append("text")
     .attr("y", 30)
     .style("text-anchor", "middle")
-    // .style("font-size", "10px")
+    // .style("font-size", "10px") // não use se for usar classes css
     .text((d) => {
       return d.team;
     });
@@ -124,22 +118,13 @@ function overallTeamViz(incomingData, tagRaiz) {
 
   function highlightRegion2(d, i, node) {
     select(this).select("text").classed("active", true).attr("y", 10);
-    // selectAll("g.overallG")
-    //   .select("circle")
-    //   .each(function (p, index) {
-    //     p.region == d.region
-    //       ? select(node[index]).classed("active", true)
-    //       : select(node[index]).classed("inactive", true);
-    //   });
+
     selectAll("g.overallG")
       .select("circle")
       .each(function (p, id) {
         p.region == d.region
-          ? // ? select(this).style("fill", "red")
-            // : select(this).style("fill", "gray");
-            select(this).classed("active", true)
+          ? select(this).classed("active", true)
           : select(this).classed("inactive", true);
-        if (p.region == d.region) console.log(p.region + " : " + p.team);
       });
   }
 
