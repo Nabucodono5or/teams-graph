@@ -3,6 +3,7 @@ import { select, selectAll } from "d3-selection";
 import { keys } from "d3-collection";
 import { max } from "d3-array";
 import { scaleLinear } from "d3";
+import { color } from "d3-color";
 
 /// ----------------funções auxiliares --------------------------------
 function inciandoGraficos(teamG) {
@@ -90,6 +91,7 @@ function overallTeamViz(incomingData, tagRaiz) {
   criandoEventoMouseOver("g.overallG", highlightRegion2);
   criandoEventoMouseout("g.overallG", unHighLight);
 
+  // funções internas dentro do overallTeamViz
   function buttonClick(datapoint) {
     let maxValue = max(incomingData, (el) => {
       return parseFloat(el[datapoint]);
@@ -117,15 +119,26 @@ function overallTeamViz(incomingData, tagRaiz) {
   }
 
   function highlightRegion2(d, i, node) {
+    let colorTeam = color("pink");
+
     select(this).select("text").classed("active", true).attr("y", 10);
+
+    // selectAll("g.overallG")
+    //   .select("circle")
+    //   .each(function (p, id) {
+    //     p.region == d.region
+    //       ? select(this).classed("active", true)
+    //       : select(this).classed("inactive", true);
+    //   });
 
     selectAll("g.overallG")
       .select("circle")
-      .each(function (p, id) {
+      .style("fill", function (p, id) {
         p.region == d.region
-          ? select(this).classed("active", true)
-          : select(this).classed("inactive", true);
+          ? colorTeam.darker(0.75)
+          : colorTeam.brighter(0.25);
       });
+    this.parentElement.appendChild(this);
   }
 
   function unHighLight() {
