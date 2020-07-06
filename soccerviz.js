@@ -2,9 +2,15 @@ import { csv } from "d3-fetch";
 import { select, selectAll } from "d3-selection";
 import { keys } from "d3-collection";
 import { max } from "d3-array";
-import { scaleLinear } from "d3";
+import { scaleLinear, scaleOrdinal } from "d3";
 import { color } from "d3-color";
-import { interpolateHsl, interpolateHcl, interpolateHue, interpolateLab } from "d3-interpolate";
+import {
+  interpolateHsl,
+  interpolateHcl,
+  interpolateHue,
+  interpolateLab,
+} from "d3-interpolate";
+import { schemePaired, schemeAccent, schemeOranges } from "d3-scale-chromatic";
 
 /// ----------------funções auxiliares --------------------------------
 function inciandoGraficos(teamG, mesuareColor) {
@@ -99,12 +105,16 @@ function overallTeamViz(incomingData, tagRaiz) {
       return parseFloat(el[datapoint]);
     });
 
-    let radiusScale = scaleLinear().domain([0, maxValue]).range([2, 20]);
-    let mesuareColor = scaleLinear()
-      .interpolate(interpolateLab)  
-      .domain([0, maxValue])
-      .range(["yellow", "blue"]);
+    // let mesuareColor = scaleLinear()
+    //   .interpolate(interpolateLab)
+    //   .domain([0, maxValue])
+    //   .range(["yellow", "blue"]);
 
+    let categorias = ["UEFA", "CONMEBOL", "CAF", "AFC"];
+    let radiusScale = scaleLinear().domain([0, maxValue]).range([2, 20]);
+    let shemaColors = scaleOrdinal().domain(categorias).range(schemePaired);
+    console.log(schemePaired);
+    
     teamG
       .select("circle")
       .transition()
@@ -113,7 +123,7 @@ function overallTeamViz(incomingData, tagRaiz) {
         return radiusScale(d[datapoint]);
       })
       .style("fill", (d, i) => {
-        return mesuareColor(d[datapoint]);
+        return shemaColors(d.region);
       });
   }
 
