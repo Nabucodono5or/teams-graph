@@ -134,7 +134,7 @@ function overallTeamViz(incomingData, tagRaiz) {
     selectAll("g.overallG")
       .select("circle")
       .style("fill", function (p, id) {
-        p.region == d.region
+        return p.region == d.region
           ? colorTeam.darker(0.75)
           : colorTeam.brighter(0.25);
       });
@@ -142,7 +142,8 @@ function overallTeamViz(incomingData, tagRaiz) {
   }
 
   function unHighLight() {
-    selectAll("g.overallG").select("circle").attr("class", "");
+    // selectAll("g.overallG").select("circle").attr("class", "");
+    selectAll("g.overallG").select("circle").style("fill", "pink");
     selectAll("g.overallG").select("text").attr("class", "");
     selectAll("g.overallG").select("text").attr("y", 30);
   }
