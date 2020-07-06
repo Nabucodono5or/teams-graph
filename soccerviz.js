@@ -4,9 +4,10 @@ import { keys } from "d3-collection";
 import { max } from "d3-array";
 import { scaleLinear } from "d3";
 import { color } from "d3-color";
+import { interpolateHsl, interpolateHcl, interpolateHue, interpolateLab } from "d3-interpolate";
 
 /// ----------------funções auxiliares --------------------------------
-function inciandoGraficos(teamG) {
+function inciandoGraficos(teamG, mesuareColor) {
   teamG
     .append("circle")
     .attr("r", 0)
@@ -21,6 +22,7 @@ function inciandoGraficos(teamG) {
     .duration(500)
     .attr("r", 20)
     .style("stroke", "black")
+    .style()
     .style("stroke-width", "1px");
 }
 
@@ -98,6 +100,10 @@ function overallTeamViz(incomingData, tagRaiz) {
     });
 
     let radiusScale = scaleLinear().domain([0, maxValue]).range([2, 20]);
+    let mesuareColor = scaleLinear()
+      .interpolate(interpolateLab)  
+      .domain([0, maxValue])
+      .range(["yellow", "blue"]);
 
     teamG
       .select("circle")
@@ -105,6 +111,9 @@ function overallTeamViz(incomingData, tagRaiz) {
       .duration(1000)
       .attr("r", (d) => {
         return radiusScale(d[datapoint]);
+      })
+      .style("fill", (d, i) => {
+        return mesuareColor(d[datapoint]);
       });
   }
 
@@ -143,7 +152,7 @@ function overallTeamViz(incomingData, tagRaiz) {
 
   function unHighLight() {
     // selectAll("g.overallG").select("circle").attr("class", "");
-    selectAll("g.overallG").select("circle").style("fill", "pink");
+    // selectAll("g.overallG").select("circle").style("fill", "pink");
     selectAll("g.overallG").select("text").attr("class", "");
     selectAll("g.overallG").select("text").attr("y", 30);
   }
