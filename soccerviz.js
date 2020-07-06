@@ -2,7 +2,7 @@ import { csv } from "d3-fetch";
 import { select, selectAll } from "d3-selection";
 import { keys } from "d3-collection";
 import { max } from "d3-array";
-import { scaleLinear, scaleOrdinal } from "d3";
+import { scaleLinear, scaleOrdinal, scaleQuantize } from "d3";
 import { color } from "d3-color";
 import {
   interpolateHsl,
@@ -113,8 +113,11 @@ function overallTeamViz(incomingData, tagRaiz) {
     let categorias = ["UEFA", "CONMEBOL", "CAF", "AFC"];
     let radiusScale = scaleLinear().domain([0, maxValue]).range([2, 20]);
     let shemaColors = scaleOrdinal().domain(categorias).range(schemePaired);
+    let schemaImpacts = scaleQuantize()
+      .domain([0, maxValue])
+      .range(schemeOranges[3]);
     console.log(schemePaired);
-    
+
     teamG
       .select("circle")
       .transition()
@@ -122,9 +125,12 @@ function overallTeamViz(incomingData, tagRaiz) {
       .attr("r", (d) => {
         return radiusScale(d[datapoint]);
       })
-      .style("fill", (d, i) => {
-        return shemaColors(d.region);
+      .style("fill", (d) => {
+        return schemaImpacts(d[datapoint]);
       });
+    // .style("fill", (d, i) => {
+    //   return shemaColors(d.region);
+    // });
   }
 
   function highlightRegion(datapoint) {
@@ -162,7 +168,7 @@ function overallTeamViz(incomingData, tagRaiz) {
 
   function unHighLight() {
     // selectAll("g.overallG").select("circle").attr("class", "");
-    // selectAll("g.overallG").select("circle").style("fill", "pink");
+    selectAll("g.overallG").select("circle").style("fill", "pink");
     selectAll("g.overallG").select("text").attr("class", "");
     selectAll("g.overallG").select("text").attr("y", 30);
   }
