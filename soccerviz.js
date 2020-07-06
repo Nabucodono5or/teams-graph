@@ -32,6 +32,18 @@ function inciandoGraficos(teamG, mesuareColor) {
     .style("stroke-width", "1px");
 }
 
+function inserindoBandeiras(teamG) {
+  selectAll(teamG)
+    .insert("image", "text")
+    .attr("xlink:href", (d) => {
+      return "images/" + d.team + ".png";
+    })
+    .attr("width", "45px")
+    .attr("height", "20px")
+    .attr("x", "-22")
+    .attr("y", "-10");
+}
+
 function criandoEventoMouseOver(tag, callback) {
   selectAll(tag).on("mouseover", callback);
 }
@@ -84,6 +96,7 @@ function overallTeamViz(incomingData, tagRaiz) {
   let teamG = selectAll("g.overallG");
 
   inciandoGraficos(teamG);
+  inserindoBandeiras(teamG);
 
   teamG
     .append("text")
