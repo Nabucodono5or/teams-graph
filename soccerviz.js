@@ -4,6 +4,7 @@ import { keys } from "d3-collection";
 import { max } from "d3-array";
 import { scaleLinear, scaleOrdinal, scaleQuantize } from "d3";
 import { color } from "d3-color";
+import images from "./images/*.png"; // cria um objeto onde key é nome da imagem sem sufixo e value seu endereço dentro do dist/
 import {
   interpolateHsl,
   interpolateHcl,
@@ -33,10 +34,11 @@ function inciandoGraficos(teamG, mesuareColor) {
 }
 
 function inserindoBandeiras(teamG) {
-  selectAll(teamG)
-    .insert("image", "text")
+  teamG
+    .insert("image")
     .attr("xlink:href", (d) => {
-      return "images/" + d.team + ".png";
+      let img = images[d.team];
+      return img;
     })
     .attr("width", "45px")
     .attr("height", "20px")
