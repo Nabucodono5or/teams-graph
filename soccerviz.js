@@ -1,6 +1,6 @@
-import { csv } from "d3-fetch";
+import { csv, html } from "d3-fetch";
 import { select, selectAll } from "d3-selection";
-import { keys } from "d3-collection";
+import { keys, values } from "d3-collection";
 import { max } from "d3-array";
 import { scaleLinear, scaleOrdinal, scaleQuantize } from "d3";
 import { color } from "d3-color";
@@ -46,6 +46,17 @@ function inserindoBandeiras(teamG) {
     .attr("y", "-10");
 }
 
+function inserindoTabelaModal() {
+  let data = require("./resources/modal.html");
+  console.log(data);
+  select("body").append("div").attr("id", "modal").html(data);
+  // o código abaixo não funciona com parcel
+  // html(require("./resources/modal.html")).then((data) => {
+  //   console.log(data);
+  //   select("body").append("div").attr("id", "modal").html(data);
+  // });
+}
+
 function criandoEventoMouseOver(tag, callback) {
   selectAll(tag).on("mouseover", callback);
 }
@@ -56,6 +67,10 @@ function criandoEventoClick(tag, callback) {
 
 function criandoEventoMouseout(tag, callback) {
   selectAll(tag).on("mouseout", callback);
+}
+
+function criandoEventoClickModal(tag, callback) {
+  selectAll(tag).on("click", callback);
 }
 
 function criandoButtons(dataKeys) {
@@ -99,6 +114,7 @@ function overallTeamViz(incomingData, tagRaiz) {
 
   inciandoGraficos(teamG);
   inserindoBandeiras(teamG);
+  inserindoTabelaModal();
 
   teamG
     .append("text")
@@ -113,8 +129,18 @@ function overallTeamViz(incomingData, tagRaiz) {
   criandoEventoClick("button.teams", buttonClick);
   criandoEventoMouseOver("g.overallG", highlightRegion2);
   criandoEventoMouseout("g.overallG", unHighLight);
+  criandoEventoClickModal("g.overallG", teamClick);
 
   // funções internas dentro do overallTeamViz
+  function teamClick(d) {
+    selectAll("td.data")
+      .data(values(d))
+      .html((p) => {
+        console.log(p);
+        return p;
+      });
+  }
+
   function buttonClick(datapoint) {
     let maxValue = max(incomingData, (el) => {
       return parseFloat(el[datapoint]);
